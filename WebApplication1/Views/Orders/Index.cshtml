@@ -1,0 +1,88 @@
+﻿@model IEnumerable<WebApplication1.Models.Order>
+@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+@if (User.IsInRole("Admin"))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First_Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Last_Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Adress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Book_Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Writer_Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Order_Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date_Sent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date_Returned)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.First_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Last_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adress)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.Book_Name)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.Writer_Name)
+                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date_Sent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date_Returned)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}

@@ -10,6 +10,8 @@ namespace WebApplication1
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<MVCOrdersContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MVCOrdersContext") ?? throw new InvalidOperationException("Connection string 'MVCOrdersContext' not found.")));
             builder.Services.AddDbContext<MVCLibraryContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MVCLibraryContext") ?? throw new InvalidOperationException("Connection string 'MVCLibraryContext' not found.")));
 

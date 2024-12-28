@@ -1,0 +1,72 @@
+﻿@model WebApplication1.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.First_Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.First_Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Last_Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Last_Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Adress)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Adress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Book_Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Book_Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Writer_Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Writer_Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Order_Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Order_Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date_Sent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date_Sent)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date_Returned)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date_Returned)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
