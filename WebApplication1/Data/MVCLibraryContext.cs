@@ -13,4 +13,6 @@ using WebApplication1.Models;
         }
 
         public DbSet<WebApplication1.Models.Book> Book { get; set; } = default!;
-    }
+    public DbSet<Review> Reviews { get; set; } 
+
+}

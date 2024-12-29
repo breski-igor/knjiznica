@@ -10,6 +10,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1
 {
+    [Authorize (Roles = "Member, Admin")]
     public class OrdersController : Controller
     {
         private readonly MVCOrdersContext _context;

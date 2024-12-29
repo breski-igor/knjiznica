@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +18,14 @@ namespace WebApplication1
         {
             _context = context;
         }
-
-        // GET: Books
+        // GET: Books/Index
         public async Task<IActionResult> Index()
         {
             return View(await _context.Book.ToListAsync());
         }
 
+
+        // GET: Books
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -33,6 +35,7 @@ namespace WebApplication1
             }
 
             var book = await _context.Book
+                .Include(b => b.Reviews) // Uključujemo recenzije
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
@@ -41,6 +44,33 @@ namespace WebApplication1
 
             return View(book);
         }
+
+        // POST: Books/AddReview
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReview(int bookId, string userName, string comment, int rating)
+        {
+            if (rating < 1 || rating > 5)
+            {
+                ModelState.AddModelError("Rating", "Rating must be between 1 and 5.");
+                return RedirectToAction("Details", new { id = bookId });
+            }
+
+            var review = new Review
+            {
+                BookId = bookId,
+                UserName = userName,
+                Comment = comment,
+                Rating = rating
+            };
+
+            _context.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = bookId });
+        }
+
+        
 
         // GET: Books/Create
         public IActionResult Create()
