@@ -11,6 +11,10 @@
     "mssql3": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:MVCOrdersContext"
+    },
+    "mssql4": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:MVMemberContext"
     }
   }
 }

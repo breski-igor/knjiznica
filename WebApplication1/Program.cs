@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +10,8 @@ namespace WebApplication1
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<MVMemberContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MVMemberContext") ?? throw new InvalidOperationException("Connection string 'MVMemberContext' not found.")));
             builder.Services.AddDbContext<MVCOrdersContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MVCOrdersContext") ?? throw new InvalidOperationException("Connection string 'MVCOrdersContext' not found.")));
             builder.Services.AddDbContext<MVCLibraryContext>(options =>
@@ -55,10 +57,12 @@ namespace WebApplication1
 
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = 
-                    scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var roles = new[] { "Admin", "Member" };
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var context = scope.ServiceProvider.GetRequiredService<MVMemberContext>(); // Pristup kontekstu za članove
 
+                // Provjera za uloge i kreiranje uloga ako ne postoje
+                var roles = new[] { "Admin", "Member" };
                 foreach (var role in roles)
                 {
                     if (!await roleManager.RoleExistsAsync(role))
@@ -66,27 +70,38 @@ namespace WebApplication1
                         await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
-            }
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var userManager = 
-                    scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                
+                // Provjera i dodavanje admin korisnika
                 string email = "admin@admin.com";
                 string password = "Test1234,";
-
-                if (await userManager.FindByEmailAsync(email) == null)
+                var adminUser = await userManager.FindByEmailAsync(email);
+                if (adminUser == null)
                 {
-                    var user = new IdentityUser();
-                    user.UserName = email;
-                    user.Email = email;
-
+                    var user = new IdentityUser { UserName = email, Email = email };
                     await userManager.CreateAsync(user, password);
-                    userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
 
+                var members = await context.Member.ToListAsync(); // Dohvatite sve članove
+                foreach (var member in members)
+                {
+                    var user = await userManager.FindByEmailAsync(member.Email);
+                    if (user != null)
+                    {
+                        // Ako je Amount 75.00, dodajte rolu "Member" ako je još nemaju
+                        if (member.Amount == 75.00 && !await userManager.IsInRoleAsync(user, "Member"))
+                        {
+                            await userManager.AddToRoleAsync(user, "Member");
+                        }
+                        // Ako Amount nije 75.00, uklonite rolu "Member" ako je imaju
+                        else if (member.Amount != 75.00 && await userManager.IsInRoleAsync(user, "Member"))
+                        {
+                            await userManager.RemoveFromRoleAsync(user, "Member");
+                        }
+                    }
+                }
             }
+
             app.Run();
         }
     }
