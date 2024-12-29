@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace WebApplication1
 {
@@ -19,9 +20,22 @@ namespace WebApplication1
             _context = context;
         }
         // GET: Books/Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Book.ToListAsync());
+            // Početno dohvaćanje svih knjiga
+            var books = from b in _context.Book
+                        select b;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Pretraga knjiga prema naslovu, autoru i žanru
+                books = books.Where(b => b.Title.ToLower().Contains(searchString.ToLower()) ||
+                                          b.Author.ToLower().Contains(searchString.ToLower()) ||
+                                          b.Genre.ToLower().Contains(searchString.ToLower()));
+            }
+
+            // Ispisivanje rezultata pretrage
+            return View(await books.ToListAsync());
         }
 
 
