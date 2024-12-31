@@ -21,15 +21,75 @@ namespace WebApplication1
         }
 
         // GET: Orders
-        
 
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            return View(await _context.Order.ToListAsync());
+            // Sortiranje
+            ViewData["FirstNameSort"] = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
+            ViewData["LastNameSort"] = sortOrder == "LastName" ? "LastName_desc" : "LastName";
+            ViewData["EmailSort"] = sortOrder == "Email" ? "Email_desc" : "Email";
+            ViewData["AdressSort"] = sortOrder == "Adress" ? "Adress_desc" : "Adress";
+            ViewData["BookNameSort"] = sortOrder == "BookName" ? "BookName_desc" : "BookName";
+            ViewData["WriterNameSort"] = sortOrder == "WriterName" ? "WriterName_desc" : "WriterName";
+            ViewData["OrderDateSort"] = sortOrder == "OrderDate" ? "OrderDate_desc" : "OrderDate";
+            ViewData["DateSentSort"] = sortOrder == "DateSent" ? "DateSent_desc" : "DateSent";
+            ViewData["DateReturnedSort"] = sortOrder == "DateReturned" ? "DateReturned_desc" : "DateReturned";
+
+            // Dohvati narudžbe
+            var orders = from o in _context.Order
+                         select o;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Provjerava ako je broj za Amount (ako želite pretraživati količinu ili slične vrijednosti)
+                bool isNumber = double.TryParse(searchString, out double searchAmount);
+
+                orders = orders.Where(o =>
+                    o.First_Name.ToLower().Contains(searchString.ToLower()) ||
+                    o.Last_Name.ToLower().Contains(searchString.ToLower()) ||
+                    o.Email.ToLower().Contains(searchString.ToLower()) ||
+                    o.Adress.ToLower().Contains(searchString.ToLower()) ||
+                    o.Book_Name.ToLower().Contains(searchString.ToLower()) ||
+                    o.Writer_Name.ToLower().Contains(searchString.ToLower()) ||
+                    (o.Order_Date != null && o.Order_Date.ToString().Contains(searchString)) ||
+                    (o.Date_Sent != null && o.Date_Sent.ToString().Contains(searchString)) ||
+                    (o.Date_Returned != null && o.Date_Returned.ToString().Contains(searchString))
+                );
+            }
+
+            // Sortiranje
+            orders = sortOrder switch
+            {
+                "FirstName_desc" => orders.OrderByDescending(o => o.First_Name),
+                "LastName_desc" => orders.OrderByDescending(o => o.Last_Name),
+                "Email_desc" => orders.OrderByDescending(o => o.Email),
+                "Adress_desc" => orders.OrderByDescending(o => o.Adress),
+                "BookName_desc" => orders.OrderByDescending(o => o.Book_Name),
+                "WriterName_desc" => orders.OrderByDescending(o => o.Writer_Name),
+                "OrderDate_desc" => orders.OrderByDescending(o => o.Order_Date),
+                "DateSent_desc" => orders.OrderByDescending(o => o.Date_Sent),
+                "DateReturned_desc" => orders.OrderByDescending(o => o.Date_Returned),
+
+                "FirstName" => orders.OrderBy(o => o.First_Name),
+                "LastName" => orders.OrderBy(o => o.Last_Name),
+                "Email" => orders.OrderBy(o => o.Email),
+                "Adress" => orders.OrderBy(o => o.Adress),
+                "BookName" => orders.OrderBy(o => o.Book_Name),
+                "WriterName" => orders.OrderBy(o => o.Writer_Name),
+                "OrderDate" => orders.OrderBy(o => o.Order_Date),
+                "DateSent" => orders.OrderBy(o => o.Date_Sent),
+                "DateReturned" => orders.OrderBy(o => o.Date_Returned),
+
+                _ => orders.OrderBy(o => o.First_Name),
+            };
+
+            return View(await orders.ToListAsync());
         }
 
+
         // GET: Orders/Details/5
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

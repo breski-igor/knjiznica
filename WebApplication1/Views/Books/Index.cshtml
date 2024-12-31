@@ -29,57 +29,62 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
+            <th scope="col">
+                <a class="text-dark" asp-controller="Books" asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]">
+        @Html.DisplayNameFor(model => model.Title)</a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
+            <th scope="col">
+                <a class="text-dark" asp-controller="Books" asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]">
+                    @Html.DisplayNameFor(model => model.Author)</a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
+            <th scope="col">
+                <a class="text-dark" asp-controller="Books" asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParm"]">
+                    @Html.DisplayNameFor(model => model.Genre)
+                </a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Availability)
+            <th scope="col">
+                <a class="text-dark" asp-controller="Books" asp-action="Index" asp-route-sortOrder="@ViewData["AvailabilitySortParm"]">
+                    @Html.DisplayNameFor(model => model.Availability)
+                </a>
             </th>
             @if (User.IsInRole("Admin"))
                 {
-                <th>
-                    @Html.DisplayNameFor(model => model.Quantity)
+                <th scope="col">
+                    <a class="text-dark" asp-controller="Books" asp-action="Index" asp-route-sortOrder="@ViewData["QuantitySortParm"]">
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </a>
                 </th>
                 }
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Title</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author)
+                <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Author</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genre)
+                <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Genre</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Availability)
+                <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Availability</a>
             </td>
-                @if (User.IsInRole("Admin"))
-                {
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-                }
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Quantity</a>
+                </td>
+            }
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 }
-                    <td><a asp-action="Details" asp-route-id="@item.Id">Details</a></td>
-                
         </tr>
 }
     </tbody>

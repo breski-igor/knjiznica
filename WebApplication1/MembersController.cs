@@ -13,36 +13,66 @@ namespace WebApplication1
     public class MembersController : Controller
     {
         private readonly MVMemberContext _context;
-        private readonly UserManager<IdentityUser> _userManager; // Dodano polje za UserManager
+        private readonly UserManager<IdentityUser> _userManager;
 
         public MembersController(MVMemberContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = userManager; // Dodano u konstruktor
+            _userManager = userManager;
         }
 
         // GET: Members
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            return View(await _context.Member.ToListAsync());
-        }
+            // Sort
+            ViewData["NameSort"] = sortOrder == "Name" ? "Name_desc" : "Name";
+            ViewData["LastNameSort"] = sortOrder == "LastName" ? "LastName_desc" : "LastName";
+            ViewData["EmailSort"] = sortOrder == "Email" ? "Email_desc" : "Email";
+            ViewData["PhoneSort"] = sortOrder == "Phone" ? "Phone_desc" : "Phone";
+            ViewData["AddressSort"] = sortOrder == "Address" ? "Address_desc" : "Address";
+            ViewData["AmountSort"] = sortOrder == "Amount" ? "Amount_desc" : "Amount";
 
-        // GET: Members/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+
+            // Get Members
+            var members = from m in _context.Member
+                          select m;
+
+
+            if (!string.IsNullOrEmpty(searchString))
             {
-                return NotFound();
+                bool isNumber = double.TryParse(searchString, out double searchAmount);
+
+                members = members.Where(m =>
+                    m.Name.ToLower().Contains(searchString.ToLower()) ||
+                    m.LastName.ToLower().Contains(searchString.ToLower()) ||
+                    m.Email.ToLower().Contains(searchString.ToLower()) ||
+                    m.Address.ToLower().Contains(searchString.ToLower()) ||
+                    m.Phone.Contains(searchString) ||
+                    (isNumber && m.Amount.HasValue && m.Amount.Value == searchAmount)
+                );
             }
 
-            var member = await _context.Member
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (member == null)
+            // Sort
+            members = sortOrder switch
             {
-                return NotFound();
-            }
+                "Name_desc" => members.OrderByDescending(m => m.Name),
+                "LastName_desc" => members.OrderByDescending(m => m.LastName),
+                "Email_desc" => members.OrderByDescending(n => n.Email),
+                "Phone_desc" => members.OrderByDescending(n => n.Phone),
+                "Address_desc" => members.OrderByDescending(n => n.Address),
+                "Amount_desc" => members.OrderByDescending(n => n.Amount),
 
-            return View(member);
+                "Name" => members.OrderBy(m => m.Name),
+                "LastName" => members.OrderBy(m => m.LastName),
+                "Email" => members.OrderBy(n => n.Email),
+                "Phone" => members.OrderBy(n => n.Phone),
+                "Address" => members.OrderBy(n => n.Address),
+                "Amount" => members.OrderBy(n => n.Amount),
+
+                _ => members.OrderBy(m => m.Name),
+            };
+
+            return View(await members.ToListAsync());
         }
 
         // GET: Members/Create
@@ -52,32 +82,29 @@ namespace WebApplication1
         }
 
         // POST: Members/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,LastName,Email,Phone,Address,City,Date,Amount")] Member member)
-{
-    if (ModelState.IsValid)
-    {
-        _context.Add(member);
-        await _context.SaveChangesAsync();
-
-        // Ako je Amount == 75.00, dodijelite rolu "Member"
-        if (member.Amount == 75.00)
         {
-            var user = await _userManager.FindByEmailAsync(member.Email);
-            if (user != null && !await _userManager.IsInRoleAsync(user, "Member"))
+            if (ModelState.IsValid)
             {
-                await _userManager.AddToRoleAsync(user, "Member");
+                _context.Add(member);
+                await _context.SaveChangesAsync();
+
+                // Ako je Amount == 75.00, dodijelite rolu "Member"
+                if (member.Amount == 75.00)
+                {
+                    var user = await _userManager.FindByEmailAsync(member.Email);
+                    if (user != null && !await _userManager.IsInRoleAsync(user, "Member"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Member");
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
             }
+            return View(member);
         }
-
-        return RedirectToAction(nameof(Index));
-    }
-    return View(member);
-}
-
 
         // GET: Members/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -96,8 +123,6 @@ namespace WebApplication1
         }
 
         // POST: Members/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,Email,Phone,Address,City,Date,Amount")] Member member)

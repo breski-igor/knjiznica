@@ -20,23 +20,46 @@ namespace WebApplication1
             _context = context;
         }
         // GET: Books/Index
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            // Početno dohvaćanje svih knjiga
+            // Sort
+            ViewData["TitleSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
+            ViewData["AuthorSortParm"] = sortOrder == "Author" ? "Author_desc" : "Author";
+            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "Genre_desc" : "Genre";
+            ViewData["QuantitySortParm"] = sortOrder == "Quantity" ? "Quantity_desc" : "Quantity";
+            ViewData["AvailabilitySortParm"] = sortOrder == "Availability" ? "Availability_desc" : "Availability";
+
+            // Get Books
             var books = from b in _context.Book
                         select b;
 
+            // Search
             if (!string.IsNullOrEmpty(searchString))
             {
-                // Pretraga knjiga prema naslovu, autoru i žanru
                 books = books.Where(b => b.Title.ToLower().Contains(searchString.ToLower()) ||
                                           b.Author.ToLower().Contains(searchString.ToLower()) ||
                                           b.Genre.ToLower().Contains(searchString.ToLower()));
             }
 
-            // Ispisivanje rezultata pretrage
+            // Sort
+            books = sortOrder switch
+            {
+                "Title_desc" => books.OrderByDescending(b => b.Title),
+                "Author_desc" => books.OrderByDescending(b => b.Author),
+                "Genre_desc" => books.OrderByDescending(b => b.Genre),
+                "Quantity_desc" => books.OrderByDescending(b => b.Quantity),
+                "Availability_desc" => books.OrderByDescending(b => b.Availability),
+                "Title" => books.OrderBy(b => b.Title),
+                "Author" => books.OrderBy(b => b.Author),
+                "Genre" => books.OrderBy(b => b.Genre),
+                "Quantity" => books.OrderBy(b => b.Quantity),
+                "Availability" => books.OrderBy(b => b.Availability),
+                _ => books.OrderBy(b => b.Title),
+            };
+
             return View(await books.ToListAsync());
         }
+
 
 
         // GET: Books
