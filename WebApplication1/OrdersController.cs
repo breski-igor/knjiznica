@@ -87,9 +87,6 @@ namespace WebApplication1
             return View(await orders.ToListAsync());
         }
 
-
-        // GET: Orders/Details/5
-
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -97,7 +94,7 @@ namespace WebApplication1
                 return NotFound();
             }
 
-            var order = await _context.Order
+            var order = await _context.Orders
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -107,8 +104,9 @@ namespace WebApplication1
             return View(order);
         }
 
+
         // GET: Orders/Create
-        
+
         public IActionResult Create()
         {
             return View();

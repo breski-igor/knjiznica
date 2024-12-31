@@ -62,8 +62,7 @@ namespace WebApplication1
 
 
 
-        // GET: Books
-        // GET: Books/Details/5
+    
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -117,19 +116,30 @@ namespace WebApplication1
 
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Author,Genre,Availability,Quantity")] Book book)
         {
             if (ModelState.IsValid)
             {
+                // Provjera količine i postavljanje dostupnosti
+                if (book.Quantity == 0)
+                {
+                    book.Availability = "Unavailable";
+                }
+                else
+                {
+                    book.Availability = "Available";
+                }
+
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
         }
+
 
         // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -150,6 +160,7 @@ namespace WebApplication1
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Genre,Availability,Quantity")] Book book)
@@ -163,6 +174,16 @@ namespace WebApplication1
             {
                 try
                 {
+                    // Provjera ako je količina 0, postavlja Availability na "Unavailable"
+                    if (book.Quantity == 0)
+                    {
+                        book.Availability = "Unavailable";
+                    }
+                    else
+                    {
+                        book.Availability = "Available";
+                    }
+
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -181,6 +202,7 @@ namespace WebApplication1
             }
             return View(book);
         }
+
 
         // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)

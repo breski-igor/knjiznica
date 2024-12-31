@@ -75,6 +75,23 @@ namespace WebApplication1
             return View(await members.ToListAsync());
         }
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var member = await _context.Members
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+            return View(member);
+        }
+
         // GET: Members/Create
         public IActionResult Create()
         {

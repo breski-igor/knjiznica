@@ -30,50 +30,51 @@
 <table class="table">
     <thead>
         <tr>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">
-                        @Html.DisplayNameFor(model => model.Name)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSort"]">
-                        @Html.DisplayNameFor(model => model.LastName)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["EmailSort"]">
-                        @Html.DisplayNameFor(model => model.Email)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["PhoneSort"]">
-                        @Html.DisplayNameFor(model => model.Phone)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["AddressSort"]">
-                        @Html.DisplayNameFor(model => model.Address)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["DateSort"]">
-                        @Html.DisplayNameFor(model => model.Date)
-                    </a>
-                </th>
-                <th scope="col">
-                    <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["AmountSort"]">
-                        @Html.DisplayNameFor(model => model.Amount)
-                    </a>
-                </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">
+                    @Html.DisplayNameFor(model => model.Name)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSort"]">
+                    @Html.DisplayNameFor(model => model.LastName)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["EmailSort"]">
+                    @Html.DisplayNameFor(model => model.Email)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["PhoneSort"]">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["AddressSort"]">
+                    @Html.DisplayNameFor(model => model.Address)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["DateSort"]">
+                    @Html.DisplayNameFor(model => model.Date)
+                </a>
+            </th>
+            <th scope="col">
+                <a class="text-dark" asp-controller="Members" asp-action="Index" asp-route-sortOrder="@ViewData["AmountSort"]">
+                    @Html.DisplayNameFor(model => model.Amount)
+                </a>
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Name</a>
-            </td>
+                    <td>
+                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Name</a>
+                    </td>
+
             <td>
                 <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.LastName</a>
             </td>

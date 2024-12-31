@@ -13,4 +13,5 @@ using WebApplication1.Models;
         }
 
         public DbSet<WebApplication1.Models.Member> Member { get; set; } = default!;
-    }
+        public DbSet<Member> Members { get; set; }
+}

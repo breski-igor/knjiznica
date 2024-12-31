@@ -13,4 +13,5 @@ using WebApplication1.Models;
         }
 
         public DbSet<WebApplication1.Models.Order> Order { get; set; } = default!;
-    }
+        public DbSet<Order> Orders { get; set; }
+}
