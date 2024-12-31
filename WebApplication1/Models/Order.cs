@@ -15,5 +15,7 @@ namespace WebApplication1.Models
         public DateOnly? Date_Sent { get; set; }
         public DateOnly? Date_Returned { get; set; }
 
+        public bool IsDateSentRed { get; set; }
+
     }
 }

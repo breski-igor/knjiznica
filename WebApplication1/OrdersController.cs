@@ -83,7 +83,25 @@ namespace WebApplication1
 
                 _ => orders.OrderBy(o => o.First_Name),
             };
+            foreach (var order in orders)
+            {
+                DateTime? dateSent = order.Date_Sent?.ToDateTime(TimeOnly.MinValue);
 
+                if (dateSent.HasValue)
+                {
+                    TimeSpan duration = DateTime.Now - dateSent.Value;
+
+                    if (duration.Days > 30)
+                    {
+                        order.IsDateSentRed = true;
+                    }
+                    else
+                    {
+                        order.IsDateSentRed = false;
+                    }
+
+                }
+            }
             return View(await orders.ToListAsync());
         }
 

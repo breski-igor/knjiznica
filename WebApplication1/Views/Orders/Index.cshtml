@@ -102,8 +102,7 @@
                     <td>
                         <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Order_Date.ToString("dd-MM-yyyy")</a>
                     </td>
-                    <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Date_Sent?.ToString("dd-MM-yyyy")</a>
+                    <td class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">@item.Date_Sent?.ToString("dd-MM-yyyy")
                     </td>
                     <td>
                         <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Date_Returned?.ToString("dd-MM-yyyy")</a>
