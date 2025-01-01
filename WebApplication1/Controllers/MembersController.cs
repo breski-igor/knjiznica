@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class MembersController : Controller
     {
@@ -48,7 +48,7 @@ namespace WebApplication1
                     m.Email.ToLower().Contains(searchString.ToLower()) ||
                     m.Address.ToLower().Contains(searchString.ToLower()) ||
                     m.Phone.Contains(searchString) ||
-                    (isNumber && m.Amount.HasValue && m.Amount.Value == searchAmount)
+                    isNumber && m.Amount.HasValue && m.Amount.Value == searchAmount
                 );
             }
 

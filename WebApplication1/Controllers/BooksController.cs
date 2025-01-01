@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 using static System.Reflection.Metadata.BlobBuilder;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class BooksController : Controller
     {
@@ -62,7 +62,7 @@ namespace WebApplication1
 
 
 
-    
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -106,7 +106,7 @@ namespace WebApplication1
             return RedirectToAction("Details", new { id = bookId });
         }
 
-        
+
 
         // GET: Books/Create
         public IActionResult Create()

@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body style="background-image: url('/Images/bokara.JPG'); background-size: cover; background-position: center;">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApplication1</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Book Place</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -40,7 +40,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

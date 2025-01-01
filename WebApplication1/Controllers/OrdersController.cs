@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
-    [Authorize (Roles = "Member, Admin")]
+    [Authorize(Roles = "Member, Admin")]
     public class OrdersController : Controller
     {
         private readonly MVCOrdersContext _context;
@@ -52,9 +52,9 @@ namespace WebApplication1
                     o.Adress.ToLower().Contains(searchString.ToLower()) ||
                     o.Book_Name.ToLower().Contains(searchString.ToLower()) ||
                     o.Writer_Name.ToLower().Contains(searchString.ToLower()) ||
-                    (o.Order_Date != null && o.Order_Date.ToString().Contains(searchString)) ||
-                    (o.Date_Sent != null && o.Date_Sent.ToString().Contains(searchString)) ||
-                    (o.Date_Returned != null && o.Date_Returned.ToString().Contains(searchString))
+                    o.Order_Date != null && o.Order_Date.ToString().Contains(searchString) ||
+                    o.Date_Sent != null && o.Date_Sent.ToString().Contains(searchString) ||
+                    o.Date_Returned != null && o.Date_Returned.ToString().Contains(searchString)
                 );
             }
 
@@ -135,7 +135,7 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
+
         public async Task<IActionResult> Create([Bind("Id,First_Name,Last_Name,Email,Adress,Book_Name,Writer_Name")] Order order)
         {
             if (ModelState.IsValid)
