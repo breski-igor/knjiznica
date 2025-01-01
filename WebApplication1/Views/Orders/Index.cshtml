@@ -9,6 +9,9 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div>
+    <a asp-controller="Home" asp-action="Index" >Take Me Home</a>
+</div>
 
 @if (User.IsInRole("Admin"))
 {
@@ -78,42 +81,64 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
-            {
+        <tbody>
+                @foreach (var item in Model)
+                {
                 <tr>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.First_Name</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.First_Name
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Last_Name</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Last_Name
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Email</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Email
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Adress</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Adress
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Book_Name</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Book_Name
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Writer_Name</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Writer_Name
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Order_Date.ToString("dd-MM-yyyy")</a>
-                    </td>
-                    <td class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">@item.Date_Sent?.ToString("dd-MM-yyyy")
-                    </td>
-                    <td>
-                        <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Date_Returned?.ToString("dd-MM-yyyy")</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Order_Date.ToString("dd-MM-yyyy")
+                        </a>
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Date_Sent?.ToString("dd-MM-yyyy")
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@(item.IsDateSentRed ? "text-danger" : "text-dark")">
+                                @item.Date_Returned?.ToString("dd-MM-yyyy")
+                        </a>
+                    </td>
+                    <td>
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
+
                 </tr>
-            }
+                }
         </tbody>
+
+
     </table>
 
 }

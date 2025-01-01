@@ -7,6 +7,10 @@
 
 <h1>Index</h1>
 
+<div>
+    <a asp-controller="Home" asp-action="Index">Take Me Home</a>
+</div>
+
 @if (User.IsInRole("Admin"))
 {
     <p>
@@ -77,7 +81,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <td>
-                    <a asp-action="Details" class="text-dark" asp-route-id="@item.Id">@item.Quantity</a>
+                    <a asp-action="Edit" class="text-dark" asp-route-id="@item.Id">@item.Quantity</a>
                 </td>
             }
                 @if (User.IsInRole("Admin"))

@@ -9,7 +9,9 @@
 <p>
     <a asp-action="Create">Become A Member!</a>
 </p>
-
+<div>
+    <a asp-controller="Home" asp-action="Index">Take Me Home</a>
+</div>
 @if (User.IsInRole("Admin"))
 {
 
