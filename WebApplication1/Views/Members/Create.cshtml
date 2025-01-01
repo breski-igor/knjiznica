@@ -6,10 +6,11 @@
 
 <h1>Create</h1>
 
-<h4>Member</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <!-- Lijeva strana: Form -->
+    <div class="col-md-6">
+        <h4>Member</h4>
+        <hr />
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -37,12 +38,21 @@
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
-           
-         
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+
+    <!-- Desna strana: Tekst -->
+    <div class="col-md-6 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4>Join Today</h4>
+                <p>Fill out your details and become part of our book-loving community. For just €25 a year, you can borrow books for up to one month at a time. We send the books by mail, and you return them the same way.</p>
+                <p>Discover a world of knowledge and entertainment, all from the comfort of your home. Join us now!</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -51,5 +61,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

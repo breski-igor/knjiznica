@@ -108,8 +108,8 @@ namespace WebApplication1.Controllers
                 _context.Add(member);
                 await _context.SaveChangesAsync();
 
-                // Ako je Amount == 75.00, dodijelite rolu "Member"
-                if (member.Amount == 75.00)
+                // Ako je Amount == 25.00, dodijelite rolu "Member"
+                if (member.Amount == 25.00)
                 {
                     var user = await _userManager.FindByEmailAsync(member.Email);
                     if (user != null && !await _userManager.IsInRoleAsync(user, "Member"))

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -125,15 +127,28 @@ namespace WebApplication1.Controllers
 
         // GET: Orders/Create
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+[Authorize]
+    public ActionResult Create()
+    {
+        var email = User.Identity.IsAuthenticated
+            ? User.FindFirst(ClaimTypes.Email)?.Value
+            : null;
+
+        var order = new Order
+        {
+            Email = email // Automatski postavite email u model
+        };
+
+        return View(order);
+    }
+
+
+    // POST: Orders/Create
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
         [ValidateAntiForgeryToken]
 
         public async Task<IActionResult> Create([Bind("Id,First_Name,Last_Name,Email,Adress,Book_Name,Writer_Name")] Order order)

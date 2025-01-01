@@ -88,13 +88,13 @@ namespace WebApplication1
                     var user = await userManager.FindByEmailAsync(member.Email);
                     if (user != null)
                     {
-                        // Ako je Amount 75.00, dodajte rolu "Member" ako je još nemaju
-                        if (member.Amount == 75.00 && !await userManager.IsInRoleAsync(user, "Member"))
+                        // Ako je Amount 25.00, dodajte rolu "Member" ako je još nemaju
+                        if (member.Amount == 25.00 && !await userManager.IsInRoleAsync(user, "Member"))
                         {
                             await userManager.AddToRoleAsync(user, "Member");
                         }
-                        // Ako Amount nije 75.00, uklonite rolu "Member" ako je imaju
-                        else if (member.Amount != 75.00 && await userManager.IsInRoleAsync(user, "Member"))
+                        // Ako Amount nije 25.00, uklonite rolu "Member" ako je imaju
+                        else if (member.Amount != 25.00 && await userManager.IsInRoleAsync(user, "Member"))
                         {
                             await userManager.RemoveFromRoleAsync(user, "Member");
                         }
