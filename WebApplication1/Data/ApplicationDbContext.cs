@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 namespace WebApplication1.Data
 {
@@ -9,5 +10,9 @@ namespace WebApplication1.Data
             : base(options)
         {
         }
+        public DbSet<Member> Member { get; set; } = default!;
+        public DbSet<Order> Order { get; set; } = default!;
+        public DbSet<Book> Book { get; set; } = default!;
+        public DbSet<Review> Reviews { get; set; } = default!;
     }
 }

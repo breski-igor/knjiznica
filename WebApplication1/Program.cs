@@ -10,17 +10,11 @@ namespace WebApplication1
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<MVMemberContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MVMemberContext") ?? throw new InvalidOperationException("Connection string 'MVMemberContext' not found.")));
-            builder.Services.AddDbContext<MVCOrdersContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MVCOrdersContext") ?? throw new InvalidOperationException("Connection string 'MVCOrdersContext' not found.")));
-            builder.Services.AddDbContext<MVCLibraryContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MVCLibraryContext") ?? throw new InvalidOperationException("Connection string 'MVCLibraryContext' not found.")));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+            
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -59,7 +53,7 @@ namespace WebApplication1
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var context = scope.ServiceProvider.GetRequiredService<MVMemberContext>(); // Pristup kontekstu za članove
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Pristup kontekstu za članove
 
                 // Provjera za uloge i kreiranje uloga ako ne postoje
                 var roles = new[] { "Admin", "Member" };

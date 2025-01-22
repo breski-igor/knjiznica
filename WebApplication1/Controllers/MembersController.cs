@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class MembersController : Controller
     {
-        private readonly MVMemberContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public MembersController(MVMemberContext context, UserManager<IdentityUser> userManager)
+        public MembersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -82,7 +83,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var member = await _context.Members
+            var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
             {

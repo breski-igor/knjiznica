@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
 using WebApplication1.Models;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -13,9 +14,9 @@ namespace WebApplication1.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly MVCLibraryContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public BooksController(MVCLibraryContext context)
+        public BooksController(ApplicationDbContext context)
         {
             _context = context;
         }

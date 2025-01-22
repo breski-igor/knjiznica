@@ -9,15 +9,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 using System.Security.Claims;
+using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
     [Authorize(Roles = "Member, Admin")]
     public class OrdersController : Controller
     {
-        private readonly MVCOrdersContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public OrdersController(MVCOrdersContext context)
+        public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -114,7 +115,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order = await _context.Order
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -130,7 +131,7 @@ namespace WebApplication1.Controllers
         
 
 [Authorize]
-    public ActionResult Create()
+    public ActionResult Create(string bookName, string writerName)
     {
         var email = User.Identity.IsAuthenticated
             ? User.FindFirst(ClaimTypes.Email)?.Value
@@ -138,7 +139,9 @@ namespace WebApplication1.Controllers
 
         var order = new Order
         {
-            Email = email // Automatski postavite email u model
+            Email = email, // Automatski postavite email u model
+            Book_Name = bookName,
+            Writer_Name = writerName
         };
 
         return View(order);
