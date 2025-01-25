@@ -173,12 +173,6 @@ namespace WebApplication1.Controllers
                     return View(order);
                 }
 
-                if (member.Amount != 25.00)
-                {
-                    ModelState.AddModelError("Amount", "Only members can make an order!");
-                    return View(order);
-                }
-
                 book.Quantity -= 1;
 
                 if (book.Quantity <= 0)
