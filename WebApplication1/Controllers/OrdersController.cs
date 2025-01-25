@@ -13,7 +13,7 @@ using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize(Roles = "Member, Admin")]
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -139,35 +139,67 @@ namespace WebApplication1.Controllers
 
         var order = new Order
         {
-            Email = email, // Automatski postavite email u model
+            Email = email,
             Book_Name = bookName,
-            Writer_Name = writerName
+            Writer_Name = writerName,
         };
 
         return View(order);
     }
 
 
-    // POST: Orders/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+        // POST: Orders/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Create([Bind("Id,First_Name,Last_Name,Email,Adress,Book_Name,Writer_Name")] Order order)
         {
             if (ModelState.IsValid)
             {
+                var member = await _context.Member.FirstOrDefaultAsync(m => m.Email == order.Email);
+                var book = await _context.Book.FirstOrDefaultAsync(b => b.Title == order.Book_Name && b.Author == order.Writer_Name);
+
+                if (book.Quantity <= 0)
+                {
+                    book.Availability = "Unavailable";
+                    await _context.SaveChangesAsync();
+                    return View(order);
+                }
+
+                if (member == null || member.Amount != 25.00)
+                {
+                    ModelState.AddModelError("Email", "Only members can make an order!");
+                    return View(order);
+                }
+
+                if (member.Amount != 25.00)
+                {
+                    ModelState.AddModelError("Amount", "Only members can make an order!");
+                    return View(order);
+                }
+
+                book.Quantity -= 1;
+
+                if (book.Quantity <= 0)
+                {
+                    book.Availability = "Unavailable";
+                }
+
                 order.Order_Date = DateOnly.FromDateTime(DateTime.Now);
                 order.Date_Sent = null;
                 order.Date_Returned = null;
 
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index", "Books");
             }
+
             return View(order);
         }
+
+
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -192,6 +224,15 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,First_Name,Last_Name,Email,Adress,Book_Name,Writer_Name,Order_Date,Date_Sent,Date_Returned")] Order order)
         {
+            var book = await _context.Book.FirstOrDefaultAsync(b => b.Title == order.Book_Name && b.Author == order.Writer_Name);
+
+            if(order.Date_Returned != null)
+            {
+                book.Quantity += 1;
+                book.Availability = "Available";
+
+            }
+
             if (id != order.Id)
             {
                 return NotFound();
@@ -223,6 +264,7 @@ namespace WebApplication1.Controllers
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -244,6 +286,11 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var order = await _context.Order.FindAsync(id);
+            var book = await _context.Book.FirstOrDefaultAsync(b => b.Title == order.Book_Name && b.Author == order.Writer_Name);
+
+            book.Quantity += 1;
+            book.Availability = "Available";
+
             if (order != null)
             {
                 _context.Order.Remove(order);

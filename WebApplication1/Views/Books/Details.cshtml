@@ -43,9 +43,16 @@
     </dl>
 </div>
 <div>
-    <a asp-controller="Orders" asp-action="Create" asp-route-bookName="@Model.Title" asp-route-writerName="@Model.Author" class="btn btn-secondary">Order</a>
-
+    @if (Model.Quantity > 0)
+    {
+        <a asp-controller="Orders" asp-action="Create" asp-route-bookName="@Model.Title" asp-route-writerName="@Model.Author" class="btn btn-secondary">Order</a>
+    }
+    else
+    {
+        <button class="btn btn-secondary" disabled>Out of Stock</button>
+    }
 </div>
+
 
 
 <div>

@@ -53,10 +53,10 @@ namespace WebApplication1
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Pristup kontekstu za članove
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                // Provjera za uloge i kreiranje uloga ako ne postoje
-                var roles = new[] { "Admin", "Member" };
+
+                var roles = new[] { "Admin"};
                 foreach (var role in roles)
                 {
                     if (!await roleManager.RoleExistsAsync(role))
@@ -65,7 +65,6 @@ namespace WebApplication1
                     }
                 }
 
-                // Provjera i dodavanje admin korisnika
                 string email = "admin@admin.com";
                 string password = "Test1234,";
                 var adminUser = await userManager.FindByEmailAsync(email);
@@ -74,25 +73,6 @@ namespace WebApplication1
                     var user = new IdentityUser { UserName = email, Email = email };
                     await userManager.CreateAsync(user, password);
                     await userManager.AddToRoleAsync(user, "Admin");
-                }
-
-                var members = await context.Member.ToListAsync(); // Dohvatite sve članove
-                foreach (var member in members)
-                {
-                    var user = await userManager.FindByEmailAsync(member.Email);
-                    if (user != null)
-                    {
-                        // Ako je Amount 25.00, dodajte rolu "Member" ako je još nemaju
-                        if (member.Amount == 25.00 && !await userManager.IsInRoleAsync(user, "Member"))
-                        {
-                            await userManager.AddToRoleAsync(user, "Member");
-                        }
-                        // Ako Amount nije 25.00, uklonite rolu "Member" ako je imaju
-                        else if (member.Amount != 25.00 && await userManager.IsInRoleAsync(user, "Member"))
-                        {
-                            await userManager.RemoveFromRoleAsync(user, "Member");
-                        }
-                    }
                 }
             }
 
