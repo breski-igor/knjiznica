@@ -117,29 +117,25 @@ namespace WebApplication1.Controllers
 
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Author,Genre,Availability,Quantity")] Book book)
         {
+            if (book.Quantity < 0)
+            {
+                return View(book);
+            }
+
             if (ModelState.IsValid)
             {
-                // Provjera količine i postavljanje dostupnosti
-                if (book.Quantity == 0)
-                {
-                    book.Availability = "Unavailable";
-                }
-                else
-                {
-                    book.Availability = "Available";
-                }
-
+                book.Availability = book.Quantity > 0 ? "Available" : "Unavailable";
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
         }
+
 
 
         // GET: Books/Edit/5
@@ -160,8 +156,6 @@ namespace WebApplication1.Controllers
 
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Genre,Availability,Quantity")] Book book)
@@ -176,7 +170,7 @@ namespace WebApplication1.Controllers
                 try
                 {
                     // Provjera ako je količina 0, postavlja Availability na "Unavailable"
-                    if (book.Quantity == 0)
+                    if (book.Quantity <= 0)
                     {
                         book.Availability = "Unavailable";
                     }
