@@ -128,24 +128,24 @@ namespace WebApplication1.Controllers
 
         // GET: Orders/Create
 
-        
 
-[Authorize]
-    public ActionResult Create(string bookName, string writerName)
-    {
-        var email = User.Identity.IsAuthenticated
-            ? User.FindFirst(ClaimTypes.Email)?.Value
-            : null;
 
-        var order = new Order
+        [Authorize]
+        public ActionResult Create(string bookName, string writerName)
         {
-            Email = email,
-            Book_Name = bookName,
-            Writer_Name = writerName,
-        };
+            var email = User.Identity.IsAuthenticated
+                ? User.FindFirst(ClaimTypes.Email)?.Value
+                : null;
 
-        return View(order);
-    }
+            var order = new Order
+            {
+                Email = email,
+                Book_Name = bookName,
+                Writer_Name = writerName,
+            };
+
+            return View(order);
+        }
 
 
         // POST: Orders/Create
@@ -167,7 +167,7 @@ namespace WebApplication1.Controllers
                     return View(order);
                 }
 
-                if (member == null || member.Amount != 25.00)
+                if (!(order.Email == "admin@admin.com" || (member != null && member.Amount == 25.00)))
                 {
                     ModelState.AddModelError("Email", "Only members can make an order!");
                     return View(order);
@@ -220,7 +220,7 @@ namespace WebApplication1.Controllers
         {
             var book = await _context.Book.FirstOrDefaultAsync(b => b.Title == order.Book_Name && b.Author == order.Writer_Name);
 
-            if(order.Date_Returned != null)
+            if (order.Date_Returned != null)
             {
                 book.Quantity += 1;
                 book.Availability = "Available";
@@ -280,17 +280,13 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var order = await _context.Order.FindAsync(id);
-            var book = await _context.Book.FirstOrDefaultAsync(b => b.Title == order.Book_Name && b.Author == order.Writer_Name);
-
-            book.Quantity += 1;
-            book.Availability = "Available";
 
             if (order != null)
             {
                 _context.Order.Remove(order);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
